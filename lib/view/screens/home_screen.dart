@@ -80,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     buttonFunction: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
+                        final scaffoldMessenger = ScaffoldMessenger.of(context);
                         try {
                           whatsappUrl = Uri.parse(
                               "whatsapp://send?phone=$_countryCode$_phone");
@@ -87,19 +88,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             await launchUrl(whatsappUrl);
                             _phoneController.clear();
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            scaffoldMessenger.showSnackBar(
                               const SnackBar(
                                 content: Text("Please Try Again Later"),
                               ),
                             );
                           }
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          scaffoldMessenger.showSnackBar(
                             SnackBar(
                               content: Text(e.toString()),
                             ),
                           );
-                          print("Error from launcher ${e.toString()}");
                         }
                       }
                     }),
