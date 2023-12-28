@@ -26,85 +26,92 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColor.offWhite,
       body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CountryCodePicker(
-                        onChanged: (countryCode) {
-                          print;
-                          _countryCode = countryCode.toString();
-                          // print("CD $_countryCode");
-                          _phoneController.clear();
-                        },
-                        initialSelection: '+20',
-                        favorite: const ['+20', '+966'],
-                        showFlagDialog: true,
-                        onInit: (code) {
-                          _countryCode = code!.dialCode.toString();
-                        }),
-                    SizedBox(
-                      width: 60.w,
-                      child: TextFormField(
-                        keyboardType: TextInputType.phone,
-                        controller: _phoneController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Phone number is required.';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          _phone = value ?? '';
-                          // print("_phone $_phone");
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'Enter phone number',
+        child: Center(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Row(
+                      children: [
+                        CountryCodePicker(
+                            onChanged: (countryCode) {
+                              print;
+                              _countryCode = countryCode.toString();
+                              _phoneController.clear();
+                            },
+                            initialSelection: '+20',
+                            favorite: const ['+20', '+966'],
+                            showFlagDialog: true,
+                            onInit: (code) {
+                              _countryCode = code!.dialCode.toString();
+                            }),
+                        SizedBox(
+                          width: 60.w,
+                          child: TextFormField(
+                            keyboardType: TextInputType.phone,
+                            controller: _phoneController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Phone number is required.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _phone = value ?? '';
+                              // print("_phone $_phone");
+                            },
+                            decoration: const InputDecoration(
+                              hintText: 'Enter phone number',
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-                RoundedButtton(
-                    buttonTitle: "Start Chat!",
-                    buttonRaduis: 5,
-                    buttonFunction: () async {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        final scaffoldMessenger = ScaffoldMessenger.of(context);
-                        try {
-                          whatsappUrl = Uri.parse(
-                              "whatsapp://send?phone=$_countryCode$_phone");
-                          if (await canLaunchUrl(whatsappUrl)) {
-                            await launchUrl(whatsappUrl);
-                            _phoneController.clear();
-                          } else {
+                  ),
+                  SizedBox(
+                    height: 8.h,
+                  ),
+                  RoundedButtton(
+                      buttonTitle: "Start Chat!",
+                      buttonRaduis: 5,
+                      buttonFunction: () async {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          final scaffoldMessenger =
+                              ScaffoldMessenger.of(context);
+                          try {
+                            whatsappUrl = Uri.parse(
+                                "whatsapp://send?phone=$_countryCode$_phone");
+                            if (await canLaunchUrl(whatsappUrl)) {
+                              await launchUrl(whatsappUrl);
+                              _phoneController.clear();
+                            } else {
+                              scaffoldMessenger.showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      "WhatsApp is not installed on this device."),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            print("error : $e");
                             scaffoldMessenger.showSnackBar(
-                              const SnackBar(
-                                content: Text("Please Try Again Later"),
+                              SnackBar(
+                                content: Text(e.toString()),
                               ),
                             );
                           }
-                        } catch (e) {
-                          scaffoldMessenger.showSnackBar(
-                            SnackBar(
-                              content: Text(e.toString()),
-                            ),
-                          );
                         }
-                      }
-                    }),
-              ],
+                      }),
+                ],
+              ),
             ),
           ),
         ),

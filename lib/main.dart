@@ -95,6 +95,7 @@ class MyApp extends StatelessWidget {
           localizationsDelegates: const [
             CountryLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
           theme: ThemeData(

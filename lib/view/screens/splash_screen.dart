@@ -48,12 +48,12 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.green,
+      backgroundColor: AppColor.greenDark,
       body: Center(
         child: SlideTransition(
           position: _animation,
           child: Image.asset(
-            "assets/images/logo.PNG",
+            "assets/images/transp_logo.png",
             width: 200.0,
             height: 200.0,
           ),
